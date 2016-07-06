@@ -2,7 +2,7 @@
  * Created by malavallim on 7/5/16.
  */
 (function () {
-  var getUserMedia = navigator.webkitGetUserMedia || function () {
+  var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || function () {
     console.log('getUserMedia() not supported.');
   };
   var constraints = {
@@ -10,7 +10,7 @@
     video: true
   };
   var setVideoSource = function (video, stream) {
-    video.src = window.URL && window.URL.createObjectURL ? window.URL.createObjectURL(stream) : stream;
+    video.src = window.URL ? window.URL.createObjectURL(stream) : stream;
   };
   var gotMedia = function (stream) {
     console.log('getUserMedia(): Got stream - ', stream);
