@@ -4,7 +4,10 @@
 (function () {
   var constraints = {
     audio: false,
-    video: true
+    video: {
+      width: { ideal: 320 },
+      height: { ideal: 240 }
+    }
   };
   var gotMedia = function (stream) {
     console.log('getUserMedia(): Got stream - ', stream);
@@ -13,8 +16,8 @@
   var gotError = function (error) {
     console.log('getUserMedia(): - ', error);
   };
-  var promise = navigator.getUserMedia(constraints);
 
-  promise.then(gotMedia);
-  promise.catch(gotError);
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then(gotMedia)
+    .catch(gotError);
 })();
