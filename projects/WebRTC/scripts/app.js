@@ -13,6 +13,8 @@
   var gotError = function (error) {
     console.log('getUserMedia(): - ', error);
   };
+  var promise = navigator.getUserMedia(constraints);
 
-  navigator.getUserMedia(constraints, gotMedia, gotError);
+  promise.then(gotMedia);
+  promise.catch(gotError);
 })();
