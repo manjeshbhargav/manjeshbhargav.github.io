@@ -20,7 +20,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
     function (e) {
       if (e.candidate) {
         console.log('Other: sending ice candidate - ', e.candidate.candidate);
-        sigChannelSelf.send({ candidate: e.candidate.candidate });
+        sigChannelSelf.send({ candidate: e.candidate.toJSON() });
       }
     };
 
@@ -28,7 +28,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
     function (data) {
       if (data.hasOwnProperty('offer')) {
         console.log('Other: offer - ', data.offer);
-        pc.setRemoteDescription(new RTCSessionDescription(data.offer))
+        pc.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.offer)))
           .then(
             function () {
               return pc.createAnswer();
@@ -41,7 +41,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
                   function () {
                     console.log('Other: local sdp set, sending answer...');
                     sigChannelSelf.send({
-                      answer: answer.sdp
+                      answer: answer.toJSON()
                     });
                   }
                 ).catch(
@@ -54,7 +54,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
       }
       else if (data.hasOwnProperty('candidate')) {
         console.log('Other: receiving ice candidate - ', data.candidate);
-        pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+        pc.addIceCandidate(new RTCIceCandidate(JSON.parse(data.candidate)))
           .catch(
             console.log.bind(console)
           );
@@ -73,7 +73,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
     function (e) {
       if (e.candidate) {
         console.log('Self: sending ice candidate - ', e.candidate.candidate);
-        sigChannelOther.send({ candidate: e.candidate.candidate });
+        sigChannelOther.send({ candidate: e.candidate.toJSON() });
       }
     };
 
@@ -81,7 +81,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
     function (data) {
       if (data.hasOwnProperty('answer')) {
         console.log('Self: answer - ', data.answer);
-        pc.setRemoteDescription(new RTCSessionDescription(data.answer))
+        pc.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.answer)))
           .then(
             function () {
               console.log('Self: connection established!');
@@ -92,7 +92,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
       }
       else if (data.hasOwnProperty('candidate')) {
         console.log('Self: receiving ice candidate - ', data.candidate);
-        pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+        pc.addIceCandidate(new RTCIceCandidate(JSON.parse(data.candidate)))
           .catch(
             console.log.bind(console)
           );
@@ -118,7 +118,7 @@ var sigChannelOther = new LoopbackSignalingChannel();
       pc.setLocalDescription(offer).then(
         function () {
           console.log('Self: local sdp set, sending offer...');
-          sigChannelOther.send({ offer: offer.sdp });
+          sigChannelOther.send({ offer: offer.toJSON() });
         }
       ).catch(
         console.log.bind(console)
