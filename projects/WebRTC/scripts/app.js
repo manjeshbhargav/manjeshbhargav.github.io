@@ -12,8 +12,10 @@ var sigChannelOther = new LoopbackSignalingChannel();
 
   pc.onicecandidate =
     function (e) {
-      console.log('Self: sending ice candidate - ', e.candidate.candidate);
-      sigChannelOther.send({ candidate: e.candidate.candidate });
+      if (e.candidate) {
+        console.log('Self: sending ice candidate - ', e.candidate.candidate);
+        sigChannelOther.send({ candidate: e.candidate.candidate });
+      }
     };
 
   sigChannelSelf.receive(
